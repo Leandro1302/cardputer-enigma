@@ -1,0 +1,49 @@
+# Local PlatformIO, CMake, and firmware build output
+/.pio/
+/.platformio/
+/build/
+/cmake-build-*/
+/dist/
+*.o
+*.elf
+*.map
+*.bin
+*.hex
+*.uf2
+
+# Local Python and uv environments and caches
+/.venv/
+/.uv-cache/
+/.uv-python/
+/.uv-tools/
+/.cache/
+/.config/
+/.local/
+/.tmp/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+
+# Private flash dumps, device transcripts, and generated release bundles
+backup/
+backups/
+backup_info.json
+flash_backup*.sha256
+/logs/
+/releases/
+*.log
+
+# Local environment settings and editor files
+.env
+.env.*
+!.env.example
+!.env.sample
+/.vscode/
+/.idea/
+.DS_Store
+*.swp
+*~

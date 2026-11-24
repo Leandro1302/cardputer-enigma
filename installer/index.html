@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Install the standalone Enigma M3 simulator on a Cardputer-ADV over USB.">
+    <meta name="theme-color" content="#19120f">
+    <title>Install Enigma M3 for Cardputer</title>
+    <link rel="stylesheet" href="./installer.css">
+    <script type="module" src="./installer.js"></script>
+  </head>
+  <body>
+    <header class="masthead">
+      <div class="page masthead-inner">
+        <a class="brand" href="./" aria-label="Enigma M3 installer">
+          <span aria-hidden="true" class="brand-mark">E</span> Enigma M3
+        </a>
+        <a class="subtle-link" href="#troubleshooting">Connection help</a>
+      </div>
+    </header>
+
+    <main class="page">
+      <section class="hero" aria-labelledby="title">
+        <div class="intro">
+          <p class="eyebrow">M5Stack Cardputer-ADV · 8 MB</p>
+          <h1 id="title">Install <span>Enigma M3</span></h1>
+          <p class="lead">Turn your Cardputer into a working three-rotor cipher machine. Connect it over USB and install directly from your browser.</p>
+          <div class="installer-controls">
+            <esp-web-install-button id="installer" manifest="./manifest.json" hidden>
+              <button class="install-button" type="button" slot="activate">Install Enigma</button>
+              <span slot="unsupported">Use a desktop browser with Web Serial enabled.</span>
+              <span slot="not-allowed">Use an HTTPS address or the localhost preview.</span>
+            </esp-web-install-button>
+            <p id="install-status" class="status" role="status" hidden>Loading the installer…</p>
+            <noscript><p class="status">Enable JavaScript to install from your browser.</p></noscript>
+            <p class="support">Use a desktop browser with Web Serial and a USB-C data cable.</p>
+          </div>
+        </div>
+        <figure class="preview">
+          <div class="preview-frame">
+            <img src="./images/enigma-menu.png" width="240" height="135" alt="The Enigma menu on the Cardputer screen, showing Configure machine and a brass gear.">
+          </div>
+          <figcaption><span>Firmware preview</span><span id="firmware-version"></span></figcaption>
+        </figure>
+      </section>
+
+      <div class="guide">
+        <section class="steps" aria-labelledby="steps-title">
+          <h2 id="steps-title">Before you install</h2>
+          <ol>
+            <li>Back up the firmware and settings you want to keep. Installing Enigma replaces the current firmware and can overwrite saved settings.</li>
+            <li>Connect your <strong>Cardputer-ADV</strong>, click <strong>Install Enigma</strong>, then select its USB port and confirm the installation. Leave full flash erase unchecked if offered.</li>
+            <li>Keep the cable connected until installation finishes. If the device stays in download mode, reset it with <kbd>G0</kbd> released.</li>
+          </ol>
+          <p class="hardware-note">The installer detects the ESP32-S3 chip. Check the model on your device before selecting its USB port.</p>
+        </section>
+
+        <section class="troubleshooting" id="troubleshooting" aria-labelledby="help-title">
+          <h2 id="help-title">Connection help</h2>
+          <details>
+            <summary>The Cardputer does not appear</summary>
+            <p>Try a USB-C data cable and plug it directly into your computer. To enter download mode, switch the Cardputer off, unplug USB, hold <kbd>G0</kbd>, and reconnect USB. Release <kbd>G0</kbd> when the device powers on, then try again.</p>
+          </details>
+          <details>
+            <summary>The port is busy or flashing fails</summary>
+            <p>Close M5Burner, serial monitors, and other tabs using the device. Reconnect the Cardputer in download mode and try again. If your browser cannot access the serial port, check your system’s USB serial permissions.</p>
+          </details>
+          <details>
+            <summary>My browser cannot install firmware</summary>
+            <p>Use a desktop browser with Web Serial enabled and open the site over HTTPS. In Brave, check <strong>Serial ports</strong> in the site settings. For a local preview, use <code>localhost</code> or <code>127.0.0.1</code>. You can also download the merged image below and use an ESP32-S3 flasher with offset <code>0x0</code>.</p>
+          </details>
+        </section>
+      </div>
+    </main>
+
+    <footer class="page footer">
+      <a href="./firmware/enigma-cardputer-merged.bin" download>Download firmware (.bin)</a>
+      <a href="./SHA256SUMS">SHA-256 checksum</a>
+      <a href="./firmware-layout.json">Flash layout</a>
+      <a href="./THIRD_PARTY_NOTICES.txt">Third-party notices</a>
+    </footer>
+  </body>
+</html>

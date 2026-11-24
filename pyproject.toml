@@ -1,0 +1,18 @@
+[project]
+name = "enigma-cardputer-dev"
+version = "0.1.0"
+description = "Isolated build and hardware-test tools for Enigma M3 on Cardputer"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "platformio==6.1.18",
+  "esptool==5.1.0",
+  "pyserial==3.5",
+  "pytest==8.4.2",
+  "py-enigma==1.0.2",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["test/host"]

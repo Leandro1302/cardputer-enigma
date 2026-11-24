@@ -1,0 +1,56 @@
+name: Publish Enigma installer
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: enigma-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
+        with:
+          version: "0.9.18"
+          enable-cache: false
+
+      - name: Build and verify firmware
+        run: |
+          bash tools/setup.sh
+          bash tools/test_native.sh
+          bash tools/build.sh
+          source tools/env.sh
+          python tools/build_installer.py
+          cd dist/installer
+          sha256sum -c SHA256SUMS
+
+      - name: Upload only the installer
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/installer
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
