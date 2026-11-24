@@ -1,9 +1,21 @@
 # Enigma web installer
 
-The installer uses [ESP Web Tools](https://esphome.github.io/esp-web-tools/).
-Visitors open the HTTPS page in a desktop browser with Web Serial, connect a Cardputer-ADV
-with a USB-C data cable, click **Install Enigma**, choose their serial port, and
-confirm. They do not need a local development environment or M5Burner.
+[Open the Enigma web installer](https://leandro1302.github.io/cardputer-enigma/)
+in a desktop browser with Web Serial. It uses ESP Web Tools to install the
+standalone firmware directly over USB. See [Install Enigma on Cardputer-ADV](flashing.md)
+for the step-by-step installation and manual flash instructions.
+
+## Connection troubleshooting
+
+If Brave blocks serial access, check **Serial ports** in the site's permission
+settings. Close other programs using the device before opening the installer.
+
+If Ubuntu detects the Cardputer but the Brave Snap shows an empty port chooser,
+check `snap connections brave`. If `brave:raw-usb` is disconnected, an
+administrator can grant the Brave Snap USB access with
+`sudo snap connect brave:raw-usb`. Fully quit and reopen Brave before retrying.
+To revoke that access afterward, run `sudo snap disconnect brave:raw-usb`.
+[Snap USB permission documentation](https://snapcraft.io/docs/reference/interfaces/raw-usb-interface/)
 
 ## Build and preview locally
 
@@ -17,18 +29,9 @@ python tools/build_installer.py
 python3 -m http.server 8765 --bind 127.0.0.1 --directory dist
 ```
 
-Open [the local installer](http://127.0.0.1:8765/installer/) in Brave. If Brave
-blocks serial access, check **Serial ports** in the site's permission settings.
-The server is loopback-only. Stop it with Ctrl+C when finished. ESP Web Tools
-is pinned to 10.5.2 and loaded over HTTPS. The preview needs internet access
-for that module. Its manifest, screenshot, and firmware are served locally.
-
-If Ubuntu detects the Cardputer but the Brave Snap shows an empty port chooser,
-check `snap connections brave`. If `brave:raw-usb` is disconnected, an
-administrator can grant the Brave Snap USB access with
-`sudo snap connect brave:raw-usb`. Fully quit and reopen Brave before retrying.
-To revoke that access afterward, run `sudo snap disconnect brave:raw-usb`.
-[Snap USB permission documentation](https://snapcraft.io/docs/reference/interfaces/raw-usb-interface/)
+Open [the local preview](http://127.0.0.1:8765/installer/) in Brave. Stop the
+loopback server with Ctrl+C when finished. The preview serves the manifest and
+firmware locally and loads ESP Web Tools 10.5.2 over HTTPS.
 
 The installer uses the same packager as the release build. It creates a fresh
 `dist/installer/` with relative URLs that also work under a GitHub Pages
@@ -55,11 +58,9 @@ flash erase is unchecked.
 
 ## Hardware check before sharing
 
-Back up anything you want to keep. In the local preview, select the Cardputer-ADV
-USB port, leave chip-wide erase unchecked if prompted, and confirm. Verify that
-the browser reports success and the device boots into Enigma. With the default
-configuration, encrypt `AAAAA` and check for `BDZGO` and rotor windows `AAF`.
-If the board does not boot after a successful flash, reset it with G0 released.
+Use the [installation steps](flashing.md#install-from-your-browser) to check that
+the deployed installer reports success and the device boots into Enigma. With the
+default configuration, encrypt `AAAAA` and check for `BDZGO` and rotor windows `AAF`.
 
 The Cardputer owner confirmed that the local installer reported success in Brave
 on Ubuntu and the Cardputer-ADV rebooted into Enigma after enabling the Brave
@@ -68,21 +69,16 @@ message, and the firmware download checksum. A separate esptool test verified
 the exact merged image on flash and confirmed that `AAAAA` produced `BDZGO` with
 rotor windows `AAF`.
 
-## Enable GitHub Pages when ready
+## Deploy an installer update
 
-1. Commit the installer source files and workflow and push them to the default
-   branch. Git ignores `dist/`, so the generated image and site can stay local.
-2. In the GitHub repository, open **Settings → Pages**. Under **Build and
-   deployment**, set **Source** to **GitHub Actions**.
-3. Go to **Actions → Publish Enigma installer → Run workflow**. Choose the
-   default branch and start the run. Nothing deploys on a push by itself.
-4. After the deployment job succeeds, use the URL shown for the `github-pages`
-   environment. Check the page over HTTPS, then repeat the hardware check above
-   before sharing the link.
+1. Push the source changes to `main`.
+2. Open **Actions → Publish Enigma installer → Run workflow**, choose `main`,
+   and start the run. Deployment starts when the workflow is run manually.
+3. After the deployment job succeeds, open the URL for the `github-pages`
+   environment and repeat the hardware check above.
 
-The workflow builds the firmware from the selected commit and uploads only
-`dist/installer/`. Check the rest of the source repository separately before
-making it public, since GitHub repository visibility includes source files beyond
-the Pages artifact.
+For a new GitHub repository or fork, first set **Settings → Pages → Source** to
+**GitHub Actions**. The workflow builds the selected commit and uploads only
+`dist/installer/`. Keep generated copies of the site and firmware out of Git.
 
 [GitHub Pages publishing source guide](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)

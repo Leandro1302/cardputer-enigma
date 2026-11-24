@@ -1,23 +1,35 @@
-# Install over USB
+# Install Enigma on Cardputer-ADV
 
-Use the standalone `enigma-cardputer-merged.bin` for an 8 MB ESP32-S3 Cardputer.
-The directly tested model is the Cardputer-ADV. Verify the release SHA-256 and
-back up the current firmware and settings before installation. A merged image
-writes padding between components, including areas used by prior firmware.
+## Install from your browser
 
-The [Enigma web installer](web-installer.md) selects the merged image and offset
-automatically and was tested on a physical Cardputer-ADV in Brave. To install a
-downloaded image manually, use the following steps.
+1. Back up the firmware and settings you want to keep. Installing Enigma can
+   overwrite settings even with full flash erase unchecked.
+2. Open the [Enigma web installer](https://leandro1302.github.io/cardputer-enigma/)
+   in a desktop browser with Web Serial, such as Brave.
+3. Connect the Cardputer-ADV with a USB-C data cable. Click **Install Enigma**,
+   choose the **Espressif USB JTAG/serial debug unit** port, and confirm. Leave
+   full flash erase unchecked if offered.
+4. Keep USB connected until the installer reports success. Enigma should boot
+   to the main menu. If it stays in download mode, reconnect USB with G0 released.
 
-1. Open the [Espressif browser flasher](https://espressif.github.io/esptool-js/)
-   in a Web Serial compatible browser such as Chrome or Edge.
-2. Connect the Cardputer with a USB-C data cable and select its serial port. If
-   automatic connection fails, set the side switch to OFF, unplug USB, hold G0
-   while reconnecting USB, and release G0 when the device powers on. [M5Stack download-mode instructions](https://docs.m5stack.com/en/core/Cardputer-Adv#download-mode)
-3. Select the merged image as the only file at address **0x0**. Keep the flash
-   settings from the image and leave flash-wide erase unchecked. Start programming.
-4. After the tool reports success, reset the Cardputer if it does not restart by
-   itself. Enigma opens directly to the main menu.
+If the installer cannot connect, unplug USB, set the side switch to **OFF**,
+and hold **G0** while reconnecting USB. Release **G0** once connected. The screen
+may stay blank in download mode. [M5Stack download-mode instructions](https://docs.m5stack.com/en/core/Cardputer-Adv#download-mode)
+
+If Ubuntu sees the Cardputer but the Brave Snap's port chooser is empty, see the
+[Brave Snap USB permission instructions](web-installer.md#connection-troubleshooting).
+
+## Flash a downloaded image manually
+
+1. Download the merged `.bin` and its SHA-256 checksum from the installer
+   footer. Verify the checksum before flashing.
+2. Open an ESP32-S3 flasher such as the
+   [Espressif browser flasher](https://espressif.github.io/esptool-js/) and
+   connect to the Cardputer.
+3. Select `enigma-cardputer-merged.bin` as the only file. Set the address to
+   **`0x0`**, keep the image's flash settings, and leave full flash erase
+   unchecked. Start programming and wait for verification. Reset the
+   Cardputer if it stays in download mode.
 
 | Component | Flash address |
 |---|---|
@@ -26,6 +38,8 @@ downloaded image manually, use the following steps.
 | `boot_app0.bin` | `0xE000` |
 | `firmware.bin` | `0x10000` |
 | `enigma-cardputer-merged.bin` | `0x0000`, instead of the four components |
+
+## Developer builds and uploads
 
 From the project directory, use `bash tools/build.sh`, source `tools/env.sh`,
 then run `python tools/package.py` to regenerate the release. The packaging script

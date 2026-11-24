@@ -57,16 +57,16 @@ pass through unchanged.
 
 ## Install firmware
 
-**Hardware tested:** M5Stack Cardputer-ADV with 8 MiB flash. The original
-Cardputer uses the same library’s board support and has not been tested here.
+**[Open the Enigma web installer](https://leandro1302.github.io/cardputer-enigma/)**
 
-Build the merged image using the commands below, then back up the existing
-firmware and settings. Use a compatible ESP32-S3 USB flasher to write
-`enigma-cardputer-merged.bin` at **`0x0`**. The separate `firmware.bin` is the
-application image at `0x10000` and requires matching boot files.
-See the [USB installation guide](docs/flashing.md) for the full procedure.
-The [web installer guide](docs/web-installer.md) covers the local browser preview
-and the manual GitHub Pages workflow.
+Back up the firmware and settings you want to keep. Open the installer in a
+desktop browser with Web Serial, connect your **M5Stack Cardputer-ADV (8 MiB)**
+with a USB-C data cable, and click **Install Enigma**. Select the Cardputer port
+and confirm. The browser handles the firmware download and flash offsets.
+
+Installation was tested in Brave on Ubuntu with a physical Cardputer-ADV.
+See the [installation guide](docs/flashing.md) for download mode,
+connection troubleshooting, and manual flashing.
 
 ## Build from source
 

@@ -75,12 +75,13 @@ def main():
     out=ROOT/"releases"/VERSION
     manifest=package_firmware(out)
     (out/"INSTALL.txt").write_text("Enigma M3 0.1.0 — M5Stack Cardputer / ESP32-S3 / 8 MB\n"
-        "Standalone merged image: enigma-cardputer-merged.bin, flash at 0x0.\n"
-        "Application-only firmware.bin belongs at 0x10000 and requires the matching bootloader and partition table.\n"
-        "Verified on Cardputer-ADV. Back up existing firmware and verify SHA256SUMS first.\n"
-        "Browser flasher: https://espressif.github.io/esptool-js/ (Chrome or Edge).\n"
-        "Select the Cardputer port and program only the merged image at 0x0.\n"
-        "No development tools or MicroHydra are required on the Cardputer.\n")
+        "Back up your firmware and settings before installing. Tested on Cardputer-ADV.\n"
+        "Open https://leandro1302.github.io/cardputer-enigma/ in a desktop Web Serial browser.\n"
+        "Connect the Cardputer with a USB-C data cable and click Install Enigma.\n"
+        "Select the Cardputer port, confirm, and wait for the device to restart.\n"
+        "\nFor manual flashing, verify SHA256SUMS and flash enigma-cardputer-merged.bin at 0x0.\n"
+        "Application-only firmware.bin belongs at 0x10000 and requires the matching bootloader and partition table.\n",
+        encoding="utf-8")
     for name in ('CHANGELOG.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md'):
         shutil.copyfile(ROOT/name,out/name)
     files=[out/i['file'] for i in manifest['components']]+[out/MERGED_NAME,out/"manifest.json",out/"INSTALL.txt",
