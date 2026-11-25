@@ -1,5 +1,12 @@
 # Enigma M3 0.1.0 validation report
 
+## Wi-Fi broadcast
+
+On the physical Cardputer-ADV, the user confirmed that `BDZGO` appeared in
+their phone’s Wi-Fi list and disappeared after **Stop Broadcasting**. The USB
+hardware suite passed all 1,003 checks, including SSID length limits and
+preservation of the message, rotor state, and undo history.
+
 ## Startup duration adjustment
 
 After confirming the animation on the physical screen, the user requested one

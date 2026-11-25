@@ -145,7 +145,61 @@ def run(client,out,checks,stability):
         for _ in current:key('BACKSPACE')
         for c in value:key(c)
         key('ENTER');key('DOWN')
-    key('ENTER');key('ESC');command('CONFIG',**DEFAULT)
+    key('ENTER')
+    actions = key('ENTER')
+    check('message actions open with the radio off',
+          actions['screen'] == 'message_actions' and not actions['broadcast']['active'])
+    empty = key('ENTER')
+    check('broadcast rejects empty output', empty['notice'] == 'Type a message first.'
+          and not empty['broadcast']['active'])
+    key('ESC')
+    for c in 'AAAAA':
+        original = key(c)
+    key('ENTER')
+    screenshot(client, out/'message-actions.png')
+    try:
+        live = key('ENTER')
+        check('Wi-Fi driver reports one open AP with the published vector as its SSID',
+              live['screen'] == 'broadcasting' and
+              live['broadcast'] == {'active': True, 'ssid': 'BDZGO', 'open': True})
+        screenshot(client, out/'broadcasting.png')
+    finally:
+        stopped = command('UI_STATE')['ui']
+        if stopped['screen'] == 'broadcasting':
+            stopped = key('ENTER')
+    check('Stop Broadcasting turns off SoftAP and returns to actions',
+          stopped['screen'] == 'message_actions' and not stopped['broadcast']['active'])
+    key('DOWN')
+    returned = key('ENTER')
+    check('broadcast preserves input, output and rotor state',
+          returned['screen'] == 'message' and all(returned[field] == original[field]
+          for field in ('input', 'output', 'positions', 'letters_processed')))
+    undone = key('BACKSPACE')
+    check('undo remains exact after broadcast', undone['output'] == 'BDZG' and undone['positions'] == 'AAE')
+    key('RESET')
+    for c in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ -?!  ':
+        boundary = key(c)
+    key('ENTER')
+    try:
+        live = key('ENTER')
+        check('32-byte SSID is accepted verbatim',
+              len(boundary['output']) == 32 and live['broadcast']['active'] and
+              live['broadcast']['ssid'] == boundary['output'])
+    finally:
+        stopped = key('ESC')
+    check('back from broadcast stops the live AP',
+          stopped['screen'] == 'message_actions' and not stopped['broadcast']['active'])
+    key('ESC')
+    key('A')
+    key('ENTER')
+    oversized = key('ENTER')
+    check('33-byte output is rejected without truncation or broadcasting',
+          oversized['screen'] == 'message_actions' and oversized['notice'] == 'SSID limit: 32 bytes.'
+          and len(oversized['output']) == 33 and not oversized['broadcast']['active'])
+    key('ESC')
+    key('RESET')
+    key('ESC')
+    command('CONFIG',**DEFAULT)
     before=command('DIAG')
     for i in range(stability):
         check('repeated ping '+str(i),command('PING')['reply']=='PONG')

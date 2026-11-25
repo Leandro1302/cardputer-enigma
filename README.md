@@ -55,6 +55,20 @@ pass through unchanged.
 | **Fn + Backspace** | Clear the message and return to the configured starting positions. |
 | **Fn +** `;` or **Fn +** `.` | Scroll through the message. |
 
+### Share a message as a Wi-Fi name
+
+1. In **Encrypt / decrypt**, type a message. With the default settings,
+   `AAAAA` produces `BDZGO`.
+2. Press **Enter** to open **Message Actions**, then choose **Broadcast as Wi-Fi**.
+   Your phone’s Wi-Fi list should show `BDZGO` as an open network. Just look
+   for the name in the list.
+3. Press **Enter** on **Stop Broadcasting**, or press **Esc**. The network
+   disappears after the Wi-Fi list refreshes. Your message and rotor positions
+   stay where you left them.
+
+The encrypted output must be 1–32 characters. Nearby devices can see it while
+you broadcast.
+
 ## Install firmware
 
 **[Open the Enigma web installer](https://leandro1302.github.io/cardputer-enigma/)**

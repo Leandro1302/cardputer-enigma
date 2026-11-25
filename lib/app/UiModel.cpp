@@ -7,6 +7,8 @@ const char* UiModel::screenName() const {
     case Screen::Configure: return "configure";
     case Screen::Edit: return "edit";
     case Screen::Message: return "message";
+    case Screen::MessageActions: return "message_actions";
+    case Screen::Broadcasting: return "broadcasting";
     case Screen::Summary: return "summary";
     case Screen::Help: return "help";
     }
@@ -65,11 +67,33 @@ void UiModel::enter() {
             else notice=enigma::errorName(e);
         } else { editor=fieldValue(field); screen=Screen::Edit; notice="Backspace to edit; Enter saves"; }
     } else if(screen==Screen::Edit) commitEdit();
-    else if(screen==Screen::Message) notice="Fn+Backspace: new message";
+    else if(screen==Screen::Message) {
+        screen=Screen::MessageActions; messageAction=0; notice.clear();
+    }
     else screen=Screen::Menu;
 }
 void UiModel::key(const std::string& key) {
     ++revision;
+    if(screen==Screen::Broadcasting) {
+        if(key=="ENTER"||key=="ESC"||key=="BACKSPACE") {
+            if(broadcast_.stop()) { screen=Screen::MessageActions; notice.clear(); }
+            else notice="Could not stop Wi-Fi. Retry.";
+        }
+        return;
+    }
+    if(screen==Screen::MessageActions) {
+        if(key=="ESC"||key=="BACKSPACE"||(key=="ENTER"&&messageAction==1)) {
+            screen=Screen::Message; notice.clear();
+        } else if(key=="UP"||key=="DOWN"||key=="LEFT"||key=="RIGHT") {
+            messageAction=1-messageAction; notice.clear();
+        } else if(key=="ENTER") {
+            if(output.empty()) notice="Type a message first.";
+            else if(output.size()>Broadcast::MaxSsidBytes) notice="SSID limit: 32 bytes.";
+            else if(broadcast_.start(output)) { screen=Screen::Broadcasting; notice.clear(); }
+            else notice="Could not start Wi-Fi. Retry.";
+        }
+        return;
+    }
     if(key=="ESC") {
         screen=screen==Screen::Edit?Screen::Configure:Screen::Menu; notice.clear(); return;
     }

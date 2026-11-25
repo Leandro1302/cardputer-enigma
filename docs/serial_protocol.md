@@ -24,7 +24,7 @@ Framing errors that cannot recover an ID return `id:null`. Unknown fields are re
 | RESET | none | restores configured initial positions and zeroes letter count |
 | SELFTEST | none | known-vector and double-step checks using a temporary machine |
 | DIAG | none | uptime, reset reason, heap, request/error/frame/key counters, startup animation status and frame count |
-| UI_STATE | none | GUI screen, selection, draft editor, messages, actual rotor state and physical key counter |
+| UI_STATE | none | GUI screen, selection, draft editor, messages, rotor state, physical key counter, and Wi-Fi broadcast status |
 | UI_KEY | `key`: printable character or named action | injects an abstract action into the real GUI model and renders |
 | SCREEN | `row`: integer 0…134 | 240 RGB565 pixels as 960 hexadecimal digits |
 
@@ -49,6 +49,13 @@ move the main menu carousel. UP and DOWN remain aliases there and navigate the
 configuration list. Editing uses append and backspace. UI_KEY is for synthetic UI tests
 and does not increment the physical keyboard counter. Serial CONFIG/ENCRYPT/RESET
 affect the serial session only; UI_KEY affects the on-screen session.
+
+In the message screen, ENTER opens `message_actions`. Its `message_action` index
+is 0 for **Broadcast as Wi-Fi** or 1 for **Back**. Selecting the broadcast action
+starts an open SoftAP with the ciphertext as its SSID and enters `broadcasting`.
+ENTER, ESC, and BACKSPACE stop it and return to Message Actions. The `broadcast`
+object reports `active`, `ssid`, and `open` from the firmware's Wi-Fi backend.
+When inactive, the SSID is empty and `open` is false.
 
 Errors include BAD_JSON, BAD_REQUEST, UNKNOWN_FIELD, UNKNOWN_COMMAND,
 INVALID_CONFIG, INVALID_ROTOR, DUPLICATE_ROTOR, INVALID_RINGS, INVALID_POSITIONS,

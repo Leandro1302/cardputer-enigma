@@ -211,7 +211,39 @@ void DisplayRenderer::render(const app::UiModel& ui) {
         text(6, 85, "OUT", Brass);
         text(6, 96, output.substr(0, 38), BrassLight);
         if (output.size() > 38) text(6, 106, output.substr(38), BrassLight);
-        footer(ui.notice.empty() ? "` Menu  Fn+BS Reset  Fn+;/. Scroll" : ui.notice);
+        footer(ui.notice.empty() ? "Enter Actions  Fn+BS Reset  ` Menu" : ui.notice);
+        break;
+    }
+    case app::Screen::MessageActions: {
+        title("MESSAGE ACTIONS");
+        const char* actions[] = {"Broadcast as Wi-Fi", "Back"};
+        for (int i = 0; i < 2; ++i) {
+            const bool selected = ui.messageAction == i;
+            const int y = 27 + i * 29;
+            canvas_.fillRoundRect(11, y, 218, 23, 4, selected ? Walnut : Panel);
+            canvas_.drawRoundRect(11, y, 218, 23, 4, selected ? Brass : Border);
+            if (selected) canvas_.fillCircle(22, y + 11, 2, BrassLight);
+            text(31, y + 8, actions[i], selected ? BrassLight : Cream);
+        }
+        text(12, 93, "SSID is visible to nearby devices.", Muted);
+        text(12, 106, ui.notice.empty() ? "1-32 bytes of ciphertext" : ui.notice, Brass);
+        footer("; . Move    Enter Select    ` Back");
+        break;
+    }
+    case app::Screen::Broadcasting: {
+        title("WI-FI BROADCAST");
+        const auto status = ui.broadcastStatus();
+        canvas_.fillCircle(14, 30, 3, status.active ? BrassLight : Muted);
+        text(23, 27, status.active ? "ACTIVE   /   OPEN NETWORK" : "INACTIVE", BrassLight);
+        text(12, 45, "NETWORK NAME (SSID)", Muted);
+        canvas_.fillRoundRect(11, 56, 218, 21, 4, Panel);
+        canvas_.drawRoundRect(11, 56, 218, 21, 4, Border);
+        text(17, 63, ui.output, Cream);
+        canvas_.fillRoundRect(11, 85, 218, 22, 4, Walnut);
+        canvas_.drawRoundRect(11, 85, 218, 22, 4, Brass);
+        text(20, 92, "Stop Broadcasting", BrassLight);
+        if (!ui.notice.empty()) text(12, 111, ui.notice, Brass);
+        footer("Enter Stop    ` Back");
         break;
     }
     case app::Screen::Summary:
@@ -233,7 +265,7 @@ void DisplayRenderer::render(const app::UiModel& ui) {
         text(6, 64, "are preserved without stepping.", Cream);
         text(6, 78, "Backspace undoes the last key.", Cream);
         text(6, 92, "Fn+Backspace clears the message.", Cream);
-        text(6, 106, "1024 chars; serial can stream more.", Muted);
+        text(6, 106, "Enter actions; Fn+;/. scrolls.", Muted);
         footer("Enter / ` Back");
         break;
     }

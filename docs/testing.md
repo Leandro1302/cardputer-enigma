@@ -65,6 +65,12 @@ pings by default, heap stability, and serial reopen. The reopen
 check verifies continuous uptime and the same non-default cipher state. Each
 framebuffer row is a read-only request and can be retried once after a timeout.
 
+The suite also starts and stops the physical board's SoftAP through Message
+Actions. It checks the SSID and open authentication reported by the driver,
+empty and oversized rejection, exact 32-byte output, and rotor state and undo
+after broadcasting. See the [phone test result](validation.md#wi-fi-broadcast)
+for independent confirmation.
+
 ## Physical check
 
 With the keyboard below the LCD, the main menu should be upright and all five

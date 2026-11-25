@@ -33,7 +33,10 @@ USB RX queue accommodates complete 2048-byte frames. Parsing has an inactivity
 timeout, and work is serviced incrementally alongside the keyboard/display loop.
 
 The application does not wait for a serial host at boot. Speaker and microphone
-are disabled. No Wi-Fi/Bluetooth or storage subsystem is used by this application.
+are disabled. `src/wifi/WifiBroadcast` implements the broadcast interface used
+by Message Actions. It configures one visible, open 2.4 GHz SoftAP using the
+ciphertext as its exact SSID. The configuration stays in RAM. The UI stops the
+radio when leaving the broadcast screen and preserves the message and undo history.
 
 The display renderer uses the same sprite for the startup animation and the UI.
 The 2.6-second startup animation draws three counter-rotating gears and reveals

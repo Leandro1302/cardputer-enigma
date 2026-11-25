@@ -4,8 +4,10 @@
 #include "ui/Display.h"
 #include "ui/Keyboard.h"
 #include "serial/Protocol.h"
+#include "wifi/WifiBroadcast.h"
 
-app::UiModel ui;
+WifiBroadcast broadcast;
+app::UiModel ui(broadcast);
 DisplayRenderer display;
 KeyboardInput keyboard;
 SerialProtocol protocol(ui,display,keyboard);

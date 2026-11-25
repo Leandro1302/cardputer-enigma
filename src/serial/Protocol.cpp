@@ -34,6 +34,10 @@ void SerialProtocol::uiState(JsonDocument& d) {
     o["input"]=ui_.input;o["output"]=ui_.output;o["editor"]=ui_.editor;o["notice"]=ui_.notice;
     o["frames"]=display_.frames;o["display_ready"]=display_.ready;
     o["physical_key_events"]=keys_.events;o["last_physical_key"]=keys_.lastKey;
+    o["message_action"]=ui_.messageAction;
+    const auto broadcast=ui_.broadcastStatus();
+    auto wifi=o["broadcast"].to<JsonObject>();
+    wifi["active"]=broadcast.active;wifi["ssid"]=broadcast.ssid;wifi["open"]=broadcast.open;
     configJson(o["config"].to<JsonObject>(),ui_.machine.config());
 }
 void SerialProtocol::poll() {
